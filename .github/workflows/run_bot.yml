@@ -2,8 +2,8 @@ name: Timebasert aksjerobot
 
 on:
   schedule:
-    - cron: '0 * * * *'   # Kjører automatisk hver time (på minutt 0)
-  workflow_dispatch:      # Lar deg starte den manuelt med en knapp for å teste
+    - cron: '0 8-20 * * *'  # Kjører hver time fra 08:00 til 20:59 (pause 21:00-07:59)
+  workflow_dispatch:        # Lar deg starte den manuelt med en knapp for å teste
 
 jobs:
   build:
