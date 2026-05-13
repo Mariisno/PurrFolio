@@ -1,0 +1,26 @@
+name: Timebasert aksjerobot
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # Kjører automatisk hver time (på minutt 0)
+  workflow_dispatch:      # Lar deg starte den manuelt med en knapp for å teste
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Henter koden din
+        uses: actions/checkout@v3
+
+      - name: Setter opp Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Installerer pakker
+        run: pip install requests yfinance google-genai
+
+      - name: Kjører roboten
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python robot.py
