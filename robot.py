@@ -3,13 +3,9 @@ import requests
 import yfinance as yf
 from google import genai
 
-# ==================== DINE INNSTILLINGER ====================
-# Din Discord-lenke ligger ferdig lagt inn her:
-DISCORD_WEBHOOK = "discordapp.com"
-
-# Henter Google-nøkkelen din automatisk fra GitHubs sikre "safe"
+# Henter hemmelighetene trygt fra GitHubs system
+DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-# ============================================================
 
 def kjor_robot():
     print("Henter aksjedata...")
