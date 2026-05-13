@@ -24,20 +24,22 @@ def hent_firi_kryptoer():
         # Filtrer for ønskede kryptovalutaer med NOK-prising
         for ticker in tickers:
             market = ticker.get("market", "")
-            if "-NOK" in market:
+            symbol = None
+            if market.endswith("-NOK"):
                 symbol = market.split("-")[0]
-                # Kun inkluder hvis det er en av de ønskede kryptovalutaene
-                if symbol in onskede_symboler:
-                    bid = float(ticker.get("bid", 0))
-                    ask = float(ticker.get("ask", 0))
-                    last_price = (bid + ask) / 2 if (bid and ask) else bid or ask
-                    
-                    kryptoer[symbol] = {
-                        "market": market,
-                        "pris": last_price,
-                        "bid": bid,
-                        "ask": ask
-                    }
+            elif market.endswith("NOK"):
+                symbol = market[:-3]
+            if symbol and symbol in onskede_symboler:
+                bid = float(ticker.get("bid", 0))
+                ask = float(ticker.get("ask", 0))
+                last_price = (bid + ask) / 2 if (bid and ask) else bid or ask
+                
+                kryptoer[symbol] = {
+                    "market": market,
+                    "pris": last_price,
+                    "bid": bid,
+                    "ask": ask
+                }
     except Exception as e:
         print(f"Feil ved henting av Firi-data: {e}")
     
