@@ -104,10 +104,10 @@ def kjor_robot():
     krypto_visning = ""
     if kryptoer:
         for symbol, data in kryptoer.items():
-            endring_str = f"{data['endring24h']:+.2f}%" if data['endring24h'] != 0 else "N/A"
+            volum_str = f"{data['volum']:.4f}" if data['volum'] else "N/A"
             krypto_visning += (
                 f"**{symbol}** — {data['pris']:.2f} NOK "
-                f"({endring_str} siste 24t) "
+                f"(volum={volum_str}) "
                 f"| spread {data['spread_prosent']:.2f}%\n"
             )
     else:
