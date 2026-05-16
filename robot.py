@@ -30,15 +30,23 @@ def hent_firi_kryptoer():
             elif market.endswith("NOK"):
                 symbol = market[:-3]
             if symbol and symbol in onskede_symboler:
-                bid = float(ticker.get("bid", 0))
-                ask = float(ticker.get("ask", 0))
-                last_price = (bid + ask) / 2 if (bid and ask) else bid or ask
-                
+                bid = float(ticker.get("bid", 0) or 0)
+                ask = float(ticker.get("ask", 0) or 0)
+                siste = float(ticker.get("last", 0) or 0)
+                volum = float(ticker.get("volume", 0) or 0)
+                endring24h = float(ticker.get("change", 0) or 0)
+                midtpris = (bid + ask) / 2 if (bid and ask) else siste or bid or ask
+                spread_prosent = ((ask - bid) / bid * 100) if bid else 0
+
                 kryptoer[symbol] = {
                     "market": market,
-                    "pris": last_price,
+                    "pris": midtpris,
                     "bid": bid,
-                    "ask": ask
+                    "ask": ask,
+                    "siste": siste,
+                    "volum": volum,
+                    "endring24h": endring24h,
+                    "spread_prosent": spread_prosent,
                 }
     except Exception as e:
         print(f"Feil ved henting av Firi-data: {e}")
@@ -52,23 +60,38 @@ def kjor_robot():
     print("Henter kryptodata fra Firi...")
     kryptoer = hent_firi_kryptoer()
     
-    # Forbered data for Gemini
-    krypto_tekst = ""
+    # Forbered detaljert datatabell for AI-prompten
     if kryptoer:
-        krypto_tekst = "Kryptovalutaer fra Firi:\n"
+        krypto_linjer = []
         for symbol, data in kryptoer.items():
-            krypto_tekst += f"- {symbol}: {data['pris']:.2f} NOK\n"
+            endring_str = f"{data['endring24h']:+.2f}%" if data['endring24h'] != 0 else "N/A"
+            volum_str = f"{data['volum']:.4f}" if data['volum'] else "N/A"
+            linje = (
+                f"{symbol}: pris={data['pris']:.2f} NOK"
+                f", siste={data['siste']:.2f} NOK"
+                f", bid={data['bid']:.2f}"
+                f", ask={data['ask']:.2f}"
+                f", spread={data['spread_prosent']:.2f}%"
+                f", 24h endring={endring_str}"
+                f", volum={volum_str}"
+            )
+            krypto_linjer.append(linje)
+        krypto_tekst = "Kryptovalutaer fra Firi:\n" + "\n".join(krypto_linjer)
     else:
         krypto_tekst = "Ingen kryptovalutaer funnet."
 
     print("Spør Google Gemini AI om analyse...")
     try:
         ai_klient = genai.Client(api_key=GEMINI_API_KEY)
-        prompt = (f"Analyser disse kryptovalutaene:\n\n"
-                  f"{krypto_tekst}\n"
-                  f"Gi en ekstremt kort vurdering på norsk (maks 3 setninger) om disse "
-                  f"fremstår som gode kjøpsmuligheter basert på prisutvikling.")
-        
+        prompt = (
+            f"Du er en kryptovaluta-analytiker. Her er sanntidsdata fra den norske børsen Firi:\n\n"
+            f"{krypto_tekst}\n\n"
+            f"For HVER kryptovaluta, gi en anbefaling på norsk med dette formatet:\n"
+            f"[SYMBOL]: [KJØP / SELG / HOLD] — [én setning begrunnelse]\n\n"
+            f"Basér anbefalingen på: 24h endring, spread (høy spread = dårlig likviditet), "
+            f"og forholdet mellom bid og siste pris. "
+            f"Ikke gi generelle råd om krypto som aktivaklasse. Vær konkret og kortfattet."
+        )
         respons = ai_klient.models.generate_content(
             model='gemini-2.5-flash',
             contents=prompt
@@ -77,11 +100,25 @@ def kjor_robot():
     except Exception as e:
         ai_svar = f"Kunne ikke hente AI-analyse. Feilmelding: {e}"
 
-    # Bygn Discord-melding
+    # Forbered kompakt visning for Discord (én linje per mynt)
+    krypto_visning = ""
+    if kryptoer:
+        for symbol, data in kryptoer.items():
+            endring_str = f"{data['endring24h']:+.2f}%" if data['endring24h'] != 0 else "N/A"
+            krypto_visning += (
+                f"**{symbol}** — {data['pris']:.2f} NOK "
+                f"({endring_str} siste 24t) "
+                f"| spread {data['spread_prosent']:.2f}%\n"
+            )
+    else:
+        krypto_visning = "Ingen data tilgjengelig."
+
     discord_melding = {
-        "content": f"🐱 **PurrFolio - Krypto oppdatering**\n\n"
-                   f"₿ **Kryptovalutaer:**\n{krypto_tekst}\n"
-                   f"🧠 **AI-analyse:**\n{ai_svar}"
+        "content": (
+            f"🐱 **PurrFolio – Krypto oppdatering**\n\n"
+            f"₿ **Markedsdata:**\n{krypto_visning}\n"
+            f"🧠 **AI-anbefalinger:**\n{ai_svar}"
+        )
     }
 
     print("Sender til Discord...")
