@@ -1,8 +1,6 @@
 name: Timebasert aksjerobot
 
 on:
-  schedule:
-    - cron: '0 8,12,17 * * *'  # Kjører tre ganger om dagen: 08:00, 12:00 og 17:00 UTC
   workflow_dispatch:        # Lar deg starte den manuelt med en knapp for å teste
 
 jobs:
@@ -25,4 +23,3 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: python robot.py
-
