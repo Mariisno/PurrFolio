@@ -16,7 +16,7 @@ jobs:
           python-version: '3.12'
 
       - name: Installerer pakker
-        run: pip install requests yfinance google-genai
+        run: pip install -r requirements.txt
 
       - name: Kjører roboten
         env:

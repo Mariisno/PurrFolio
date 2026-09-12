@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PurrFolio – porteføljen min</title>
+  <link rel="stylesheet" href="stil.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🐱</text></svg>">
+</head>
+<body>
+  <div class="side">
+    <header class="topp">
+      <div>
+        <h1>🐱 PurrFolio</h1>
+        <p class="undertittel">Porteføljen min, live fra Firi og Yahoo Finance</p>
+      </div>
+      <div class="status">
+        <span class="puls" id="puls" aria-hidden="true"></span>
+        <span id="status-tekst">Henter kurser …</span>
+        <button type="button" id="oppdater-knapp">Oppdater nå</button>
+      </div>
+    </header>
+
+    <div id="feilmelding" class="varsel varsel-feil" hidden></div>
+    <div id="advarsler" class="varsel varsel-advarsel" hidden></div>
+
+    <section class="sammendrag" aria-label="Sammendrag">
+      <div class="hovedtall">
+        <p class="etikett">Total verdi</p>
+        <p class="hovedfigur" id="total-verdi">–</p>
+        <p class="hoveddelta" id="total-gevinst">–</p>
+      </div>
+
+      <div class="fliser" role="group" aria-label="Nøkkeltall">
+        <div class="flis">
+          <p class="etikett">Kostpris</p>
+          <p class="flisverdi" id="total-kostpris">–</p>
+          <p class="flisnotat" id="antall-posisjoner">–</p>
+        </div>
+        <div class="flis">
+          <p class="etikett">Siste døgn</p>
+          <p class="flisverdi" id="endring-doegn">–</p>
+          <p class="flisnotat" id="endring-doegn-prosent">–</p>
+        </div>
+        <div class="flis">
+          <p class="etikett">Urealisert gevinst</p>
+          <p class="flisverdi" id="gevinst-kroner">–</p>
+          <p class="flisnotat" id="gevinst-prosent">–</p>
+        </div>
+        <div class="flis">
+          <p class="etikett">Største post</p>
+          <p class="flisverdi" id="storste-post">–</p>
+          <p class="flisnotat" id="storste-andel">–</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="kort" aria-labelledby="fordeling-tittel">
+      <h2 id="fordeling-tittel">Fordeling av porteføljen</h2>
+      <p class="korttekst">Andel av total verdi, største post først.</p>
+      <div class="stabel" id="fordeling-stabel" role="img" aria-label="Fordeling av porteføljen etter verdi"></div>
+      <ul class="tegnforklaring" id="fordeling-tegnforklaring"></ul>
+    </section>
+
+    <section class="kort" aria-labelledby="beholdning-tittel">
+      <h2 id="beholdning-tittel">Beholdninger</h2>
+      <div class="tabellramme">
+        <table class="tabell">
+          <thead>
+            <tr>
+              <th scope="col">Post</th>
+              <th scope="col" class="tall">Antall</th>
+              <th scope="col" class="tall">Snittpris</th>
+              <th scope="col" class="tall">Kurs nå</th>
+              <th scope="col" class="tall">Verdi</th>
+              <th scope="col" class="tall">Andel</th>
+              <th scope="col" class="tall">Siste døgn</th>
+              <th scope="col" class="tall">Gevinst</th>
+            </tr>
+          </thead>
+          <tbody id="beholdning-rader">
+            <tr><td colspan="8" class="tomt">Henter beholdninger …</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="bunn">
+      <p id="valutanotat"></p>
+      <p>
+        Kryptokurser er midtpris (bid/ask) fra Firi. Aksjer og fond er siste kurs fra Yahoo Finance,
+        omregnet til NOK med dagens vekslingskurs. Beholdningene leses fra <code>portefolje.json</code>.
+      </p>
+    </footer>
+  </div>
+
+  <div class="verktoytips" id="verktoytips" role="status" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

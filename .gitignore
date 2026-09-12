@@ -1,0 +1,6 @@
+# Din egen portefølje holdes utenfor git
+portefolje.json
+
+__pycache__/
+*.pyc
+.venv/

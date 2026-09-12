@@ -1,0 +1,373 @@
+/* PurrFolio – lokalt porteføljedashboard.
+   Fargene følger den validerte kategoripaletten (lys og mørk modus er egne
+   trinn av de samme åtte fargetonene, ikke en automatisk invertering). */
+
+:root {
+  color-scheme: light;
+
+  --flate: #fcfcfb;
+  --plan: #f9f9f7;
+  --blekk: #0b0b0b;
+  --blekk-sekundar: #52514e;
+  --blekk-dempet: #898781;
+  --strek: #e1e0d9;
+  --kant: rgba(11, 11, 11, 0.10);
+  --opp: #006300;
+  --ned: #d03b3b;
+
+  --serie-1: #2a78d6;
+  --serie-2: #eb6834;
+  --serie-3: #1baf7a;
+  --serie-4: #eda100;
+  --serie-5: #e87ba4;
+  --serie-6: #008300;
+  --serie-7: #4a3aa7;
+  --serie-8: #e34948;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --flate: #1a1a19;
+    --plan: #0d0d0d;
+    --blekk: #ffffff;
+    --blekk-sekundar: #c3c2b7;
+    --blekk-dempet: #898781;
+    --strek: #2c2c2a;
+    --kant: rgba(255, 255, 255, 0.10);
+    --opp: #0ca30c;
+    --ned: #e66767;
+
+    --serie-1: #3987e5;
+    --serie-2: #d95926;
+    --serie-3: #199e70;
+    --serie-4: #c98500;
+    --serie-5: #d55181;
+    --serie-6: #008300;
+    --serie-7: #9085e9;
+    --serie-8: #e66767;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--plan);
+  color: var(--blekk);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* min-width: 0 slipper den brede tabellen til å rulle inni kortet sitt
+   i stedet for å dytte hele siden ut i bredden på smal skjerm */
+.side > *,
+.hovedtall,
+.flis,
+.kort {
+  min-width: 0;
+}
+
+.side {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Topplinje ---------------------------------------------------------- */
+
+.topp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.undertittel {
+  margin: 2px 0 0;
+  color: var(--blekk-sekundar);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blekk-sekundar);
+  font-variant-numeric: tabular-nums;
+}
+
+.puls {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--opp);
+  box-shadow: 0 0 0 2px var(--plan);
+}
+
+.puls.henter { background: var(--serie-4); }
+.puls.feilet { background: var(--ned); }
+
+button {
+  font: inherit;
+  color: var(--blekk);
+  background: var(--flate);
+  border: 1px solid var(--kant);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+button:hover { border-color: var(--blekk-dempet); }
+button:disabled { color: var(--blekk-dempet); cursor: default; }
+
+/* Varsler ------------------------------------------------------------ */
+
+.varsel {
+  border: 1px solid var(--kant);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--flate);
+}
+
+.varsel-feil { border-left: 3px solid var(--ned); }
+.varsel-advarsel { border-left: 3px solid var(--serie-4); }
+.varsel ul { margin: 4px 0 0; padding-left: 18px; }
+
+/* Sammendrag --------------------------------------------------------- */
+
+.sammendrag {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(320px, 2fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.hovedtall,
+.flis,
+.kort {
+  background: var(--flate);
+  border: 1px solid var(--kant);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.hovedtall {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.etikett {
+  margin: 0;
+  color: var(--blekk-sekundar);
+  font-size: 12px;
+}
+
+.hovedfigur {
+  margin: 6px 0 0;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.hoveddelta {
+  margin: 6px 0 0;
+  color: var(--blekk-sekundar);
+}
+
+.fliser {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.flisverdi {
+  margin: 6px 0 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.flisnotat {
+  margin: 2px 0 0;
+  color: var(--blekk-sekundar);
+  font-size: 12px;
+}
+
+.opp { color: var(--opp); }
+.ned { color: var(--ned); }
+
+/* Kort og fordeling -------------------------------------------------- */
+
+h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.korttekst {
+  margin: 2px 0 14px;
+  color: var(--blekk-sekundar);
+  font-size: 12px;
+}
+
+/* 2px mellomrom i flatefargen skiller segmentene – ingen ramme rundt dem */
+.stabel {
+  display: flex;
+  gap: 2px;
+  height: 28px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.segment {
+  height: 100%;
+  min-width: 3px;
+  border-radius: 2px;
+  cursor: default;
+}
+
+.segment:first-child { border-radius: 4px 2px 2px 4px; }
+.segment:last-child { border-radius: 2px 4px 4px 2px; }
+
+.tegnforklaring {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--blekk-sekundar);
+}
+
+.tegnforklaring li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.prikk {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.tegnforklaring .andel {
+  color: var(--blekk);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tabell -------------------------------------------------------------- */
+
+.tabellramme {
+  overflow-x: auto;
+  max-width: 100%;
+  margin-top: 12px;
+}
+
+.tabell {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabell th,
+.tabell td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--strek);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabell th {
+  color: var(--blekk-dempet);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tabell .tall { text-align: right; }
+
+.gruppe-rad td {
+  padding-top: 18px;
+  color: var(--blekk-sekundar);
+  font-weight: 600;
+  border-bottom: 1px solid var(--kant);
+}
+
+.sum-rad td {
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.post {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.post .symbol {
+  color: var(--blekk-dempet);
+  font-size: 12px;
+}
+
+.mangler {
+  color: var(--blekk-dempet);
+  font-style: italic;
+}
+
+.tomt {
+  color: var(--blekk-sekundar);
+  text-align: center;
+  padding: 24px;
+}
+
+/* Bunntekst og verktøytips ------------------------------------------- */
+
+.bunn {
+  color: var(--blekk-dempet);
+  font-size: 12px;
+}
+
+.bunn p { margin: 4px 0; }
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+}
+
+.verktoytips {
+  position: fixed;
+  z-index: 10;
+  pointer-events: none;
+  background: var(--flate);
+  color: var(--blekk);
+  border: 1px solid var(--kant);
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  font-variant-numeric: tabular-nums;
+  max-width: 260px;
+}
+
+.verktoytips .tips-navn { font-weight: 600; }
+.verktoytips .tips-linje { color: var(--blekk-sekundar); }
+
+@media (max-width: 760px) {
+  .sammendrag { grid-template-columns: 1fr; }
+  .hovedfigur { font-size: 38px; }
+}

@@ -1,0 +1,54 @@
+{
+  "_kommentar": "Kopier denne filen til portefolje.json og fyll inn dine egne tall. 'snittpris' oppgis i samme valuta som instrumentet handles i (NOK for Firi og Oslo Børs, USD for amerikanske aksjer). 'kilde' er 'firi' for krypto og 'yahoo' for aksjer, ETF-er og fond.",
+  "beholdninger": [
+    {
+      "symbol": "BTC",
+      "navn": "Bitcoin",
+      "type": "Krypto",
+      "kilde": "firi",
+      "antall": 0.015,
+      "snittpris": 950000
+    },
+    {
+      "symbol": "ETH",
+      "navn": "Ethereum",
+      "type": "Krypto",
+      "kilde": "firi",
+      "antall": 0.4,
+      "snittpris": 32000
+    },
+    {
+      "symbol": "SOL",
+      "navn": "Solana",
+      "type": "Krypto",
+      "kilde": "firi",
+      "antall": 12,
+      "snittpris": 1450
+    },
+    {
+      "symbol": "EQNR.OL",
+      "navn": "Equinor",
+      "type": "Aksjer og fond",
+      "kilde": "yahoo",
+      "antall": 40,
+      "snittpris": 271.5
+    },
+    {
+      "symbol": "DNB.OL",
+      "navn": "DNB Bank",
+      "type": "Aksjer og fond",
+      "kilde": "yahoo",
+      "antall": 25,
+      "snittpris": 218.0
+    },
+    {
+      "symbol": "AAPL",
+      "navn": "Apple",
+      "type": "Aksjer og fond",
+      "kilde": "yahoo",
+      "antall": 8,
+      "snittpris": 195.2,
+      "valuta": "USD"
+    }
+  ]
+}
