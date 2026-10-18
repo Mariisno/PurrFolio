@@ -3,6 +3,10 @@ name: Timebasert aksjerobot
 on:
   workflow_dispatch:        # Lar deg starte den manuelt med en knapp for å teste
 
+# Jobben trenger bare å lese koden, ikke skrive til repoet
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
